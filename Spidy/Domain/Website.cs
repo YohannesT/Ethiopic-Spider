@@ -46,7 +46,7 @@ namespace Spider.Domain
             try
             {
                 var dataContext = new DataContext();
-                var site = new Site
+                var site = new WebPage
                 {
                     Url = String.Format("{0}://{1}{2}", Uri.Scheme, Uri.Authority, Uri.LocalPath),
                     IpAddress = ipAddresses,

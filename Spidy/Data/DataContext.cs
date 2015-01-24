@@ -12,8 +12,8 @@ namespace Spider.Data
 
         }
 
-        public DbSet<Site> Sites { get; set; }
-        public DbSet<Word> Words { get; set; }
+        public DbSet<WebPage> Sites { get; set; }
+        public DbSet<EthiopicWord> Words { get; set; }
         public DbSet<Paragraph> Paragraphs { get; set; }
         public DbSet<SeedSite> SeedSites { get; set; }
     }

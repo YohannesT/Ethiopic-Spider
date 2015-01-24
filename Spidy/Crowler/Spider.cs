@@ -155,7 +155,7 @@ namespace Spider.Crowler
                     DateOfEntry = DateTime.Now
                 });
 
-                var eWords = words.Select(w => new Word
+                var eWords = words.Select(w => new EthiopicWord
                 {
                     Name = w,
                     SourceSiteID = sourceSite.WebsiteID,
