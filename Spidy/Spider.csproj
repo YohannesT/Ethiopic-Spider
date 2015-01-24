@@ -59,21 +59,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Crowler\Spider.cs" />
-    <Compile Include="Crowler\EthiopicExtensions.cs" />
-    <Compile Include="Crowler\SpiderCommand.cs" />
+    <Compile Include="Spider\Spider.cs" />
+    <Compile Include="Utility\EthiopicExtensions.cs" />
+    <Compile Include="Spider\SpiderCommand.cs" />
     <Compile Include="Data\DataContext.cs" />
     <Compile Include="Data\Models\SeedWebsite.cs" />
     <Compile Include="Data\Models\WebPage.cs" />
     <Compile Include="Data\Models\Website.cs" />
     <Compile Include="Domain\WebPage.cs" />
-    <Compile Include="Services\BinaryDataService.cs" />
     <Compile Include="Data\Models\EthiopicWord.cs" />
     <Compile Include="Domain\Website.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\DataService.cs" />
-    <Compile Include="Utility\NetworkHelpers.cs" />
+    <Compile Include="Services\NetworkService.cs" />
+    <Compile Include="Utility\SpiderInfo.cs" />
     <Compile Include="Utility\UriExtension.cs" />
   </ItemGroup>
   <ItemGroup>
