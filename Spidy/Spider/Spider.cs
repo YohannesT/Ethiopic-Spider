@@ -9,15 +9,15 @@ namespace Spider.Spider
 {
     public class Spider
     {
-        private readonly int _maxAsyncThreadCount = 10;
+        private readonly int _maxAsyncThreadCount = SpiderInfo.AsyncThreadCount;
+        private readonly bool _intraDomainOnly = SpiderInfo.IntraDomainOnly;
+        public readonly int StandardDelay = SpiderInfo.StandardDelay;
+
         private int _asyncThreadCount;
-        private readonly bool _intraDomainOnly;
-        public readonly int StandardDelay = 5 * 60 * 1000;
 
         public Spider()
         {
-            _intraDomainOnly = true;
-            _maxAsyncThreadCount = 10;
+
         }
 
         public Spider(int maxAsyncThreadCount, bool intraDomainOnly = true)
@@ -53,8 +53,12 @@ namespace Spider.Spider
             var siteLinks = _intraDomainOnly ? webPage.IntraDomainLinks : webPage.AllLinks;
             var allowedUris = siteLinks.Where(u => website.IsWebsiteAllowed(u));
 
-            if (webPage.Save())
+            if (!webPage.Save())
                 webPage.Save();
+
+            if (webPage.IsSaved)
+                if(!webPage.SaveEthiopicContent())
+                    webPage.SaveEthiopicContent();
 
             _asyncThreadCount--;
 
@@ -64,7 +68,7 @@ namespace Spider.Spider
                 {
                     if (uri.Authority == childUri.Authority)
                     {
-                        var robotDelay = (int) website.Delay;
+                        var robotDelay =  website.Delay;
                         Thread.Sleep(StandardDelay > robotDelay ? StandardDelay : robotDelay);
                     }
 
@@ -76,6 +80,5 @@ namespace Spider.Spider
                 }
             }
         }
-
     }
 }
