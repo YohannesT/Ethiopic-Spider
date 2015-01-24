@@ -11,9 +11,9 @@ namespace Spider.Crowler
     {
         private readonly DataContext _dc = new DataContext();
 
-        private void ResumeCrawling(string url)
+        private void ResumeCrawling(string url, int? delayInMinutes = null)
         {
-            var spider = new Spider.Spider();
+            var spider = delayInMinutes.HasValue ? new Spider.Spider(delayInMinutes.Value) : new Spider.Spider(); 
 
             var lastSite = _dc.WebPages.OrderByDescending(s => s.Date).First();
             var uri = new Uri(lastSite.Url);
@@ -25,9 +25,10 @@ namespace Spider.Crowler
             spider.CrawlRecursive(uri, lastSite.ParentSite != null ? new WebPage(lastSite.ParentSite) : null, null );
         }
 
-        private void StartCrawling(Uri uri)
+        private void StartCrawling(Uri uri, int? delayInMinutes = null)
         {
-            var spider = new Spider.Spider();
+            var spider = delayInMinutes.HasValue ? new Spider.Spider(delayInMinutes.Value) : new Spider.Spider(); 
+            
             spider.CrawlRecursive(uri, null, null);
         }
 
@@ -59,8 +60,8 @@ namespace Spider.Crowler
                 if (Uri.TryCreate(seed.URL, UriKind.Absolute, out uri))
                 {
                     if (_dc.WebPages.Any(s => s.Url.Contains(uri.Authority)))
-                        ResumeCrawling(uri.GetUnicodeAbsoluteUri());
-                    else StartCrawling(uri);
+                        ResumeCrawling(uri.GetUnicodeAbsoluteUri(), seed.CrawlDelayInMinutes);
+                    else StartCrawling(uri, seed.CrawlDelayInMinutes);
 
                     Thread.Sleep(30 * 1000);
                 }

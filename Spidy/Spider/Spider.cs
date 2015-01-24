@@ -20,10 +20,16 @@ namespace Spider.Spider
 
         }
 
-        public Spider(int maxAsyncThreadCount, bool intraDomainOnly = true)
+        public Spider(int delayInMinutes)
+        {
+            StandardDelay = delayInMinutes * 60 * 1000;
+        }
+
+        public Spider(int maxAsyncThreadCount, int delayInMinutes, bool intraDomainOnly = true)
         {
             _maxAsyncThreadCount = maxAsyncThreadCount;
             _intraDomainOnly = intraDomainOnly;
+            StandardDelay = delayInMinutes*60*1000;
         }
 
         public async Task CrawlRecursive(Uri uri, WebPage parentWebPage, Website website)
