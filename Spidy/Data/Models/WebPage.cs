@@ -13,8 +13,6 @@ namespace Spider.Data.Models
         public int WebPageID { get; set; }
         public string Url { get; set; }
          
-        public long StreamLength { get; set; }
-       
         public DateTime Date { get; set; }
         public int NumberOfVisits { get; set; }
 

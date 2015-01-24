@@ -3,26 +3,36 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using HtmlAgilityPack;
+using Spider.Data;
+using Spider.Utility;
 
 namespace Spider.Domain
 {
     public class WebPage
     {
-        public int WebPageID { get; set; }
+        private readonly DataContext _dataContext;
 
-        private HtmlDocument _htmlDocument;
+        private readonly HtmlDocument _htmlDocument;
         private List<Uri> _intraDomainlinks, _allLinks;
         private string _htmlText, _innerText;
 
+        public int WebPageID { get; set; }
+
         public HtmlDocument HtmlDocument { get; set; }
         public Website Website { get; set; }
+        
         public Uri Uri { get; set; }
+        public WebPage ParentPage { get; set; }
 
         public DateTime Date { get; set; }
 
-        public WebPage(HtmlDocument htmlDocument)
+        public WebPage(Website website, HtmlDocument htmlDocument, Uri uri, WebPage parent = null)
         {
+            _dataContext = new DataContext();
             _htmlDocument = htmlDocument;
+            Website = website;
+            Uri = uri;
+            ParentPage = parent;
         }
 
         public string InnerText
@@ -78,6 +88,37 @@ namespace Spider.Domain
             }
 
             return childUris;
+        }
+
+        public bool Save()
+        {
+            try
+            {
+                var webpage = new Data.Models.WebPage
+                {
+                    Url = Uri.GetUnicodeAbsoluteUri()
+                    ,
+                    HtmlContent = HtmlText
+                    ,
+                    TextContent = InnerText
+                    ,
+                    WebsiteID = Website.WebsiteID
+                    ,
+                    Date = DateTime.Now
+                    ,
+                    NavigatedFromWebPageID = ParentPage != null ? ParentPage.WebPageID : new int?()
+                };
+
+                _dataContext.WebPages.Add(webpage);
+
+                WebPageID = webpage.WebPageID;
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
     }
 }
