@@ -14,7 +14,8 @@ namespace Spider.Data.Models
         public string IpAddress { get; set; }
         public string Country { get; set; }
         public DateTime Date { get; set; }
-    
+        
+        public string RobotsTxt { get; set; }
         public virtual Collection<WebPage> WebPages { get; set; } 
     }
 }

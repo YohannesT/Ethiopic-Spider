@@ -5,7 +5,6 @@ using System.Text.RegularExpressions;
 using HtmlAgilityPack;
 using RobotsTxt;
 using Spider.Data;
-using Spider.Data.Models;
 
 namespace Spider.Domain
 {

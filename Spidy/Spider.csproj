@@ -63,11 +63,13 @@
     <Compile Include="Crowler\EthiopicExtensions.cs" />
     <Compile Include="Crowler\SpiderCommand.cs" />
     <Compile Include="Data\DataContext.cs" />
-    <Compile Include="Data\Models\Paragraph.cs" />
-    <Compile Include="Data\Models\SeedSite.cs" />
-    <Compile Include="Data\Models\Site.cs" />
+    <Compile Include="Data\Models\SeedWebsite.cs" />
+    <Compile Include="Data\Models\WebPage.cs" />
+    <Compile Include="Data\Models\Website.cs" />
+    <Compile Include="Domain\WebContent.cs" />
+    <Compile Include="Domain\WebPage.cs" />
     <Compile Include="Services\BinaryDataService.cs" />
-    <Compile Include="Data\Models\Word.cs" />
+    <Compile Include="Data\Models\EthiopicWord.cs" />
     <Compile Include="Domain\Website.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
