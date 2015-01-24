@@ -2,19 +2,30 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using HtmlAgilityPack;
+using Spider.Crowler;
 using Spider.Data;
+using Spider.Data.Models;
 using Spider.Utility;
 
 namespace Spider.Domain
 {
     public class WebPage
     {
-        private readonly DataContext _dataContext;
+        private static readonly DataContext DataContext = new DataContext();
 
         private readonly HtmlDocument _htmlDocument;
         private List<Uri> _intraDomainlinks, _allLinks;
         private string _htmlText, _innerText;
+
+        public WebPage(Website website, Uri uri, WebPage parent = null)
+        {
+            Website = website;
+            Uri = uri;
+            ParentPage = parent;
+            _htmlDocument = NetworkService.GetHtmlDocumentAsync(uri).Result;
+        }
 
         public int WebPageID { get; set; }
 
@@ -26,13 +37,9 @@ namespace Spider.Domain
 
         public DateTime Date { get; set; }
 
-        public WebPage(Website website, HtmlDocument htmlDocument, Uri uri, WebPage parent = null)
+        public string FullUriText
         {
-            _dataContext = new DataContext();
-            _htmlDocument = htmlDocument;
-            Website = website;
-            Uri = uri;
-            ParentPage = parent;
+            get { return Uri.GetUnicodeAbsoluteUri(); }
         }
 
         public string InnerText
@@ -56,7 +63,74 @@ namespace Spider.Domain
         public List<Uri> IntraDomainLinks
         {
             get { return _intraDomainlinks ?? (_intraDomainlinks = GetChildUris().Where(c => c.Authority == Uri.Authority).ToList()); }
-        } 
+        }
+
+        public bool IsSaved
+        {
+            get { return DataContext.WebPages.Any(wp => wp.Url == Uri.GetUnicodeAbsoluteUri()); }
+        }
+
+        public bool Save()
+        {
+            try
+            {
+                var webpage = new Data.Models.WebPage
+                {
+                    Url = Uri.GetUnicodeAbsoluteUri()
+                    ,
+                    HtmlContent = HtmlText
+                    ,
+                    TextContent = InnerText
+                    ,
+                    WebsiteID = Website.WebsiteID
+                    ,
+                    Date = DateTime.Now
+                    ,
+                    NavigatedFromWebPageID = ParentPage != null ? ParentPage.WebPageID : new int?()
+                };
+
+                DataContext.WebPages.Add(webpage);
+
+                WebPageID = webpage.WebPageID;
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public static bool IsWebPageSaved(Uri uri)
+        {
+            return DataContext.WebPages.Any(wp => wp.Url == uri.GetUnicodeAbsoluteUri());
+        }
+
+        public async Task<bool> SaveEthiopicContentAsync()
+        {
+            try
+            {
+                if (!InnerText.ContainsEthipic()) return true;
+
+                var words = await InnerText.GetEthipicWordsAsync();
+
+                var eWords = words.Select(w => new EthiopicWord
+                {
+                    Name = w,
+                    SourceWebPageID = WebPageID,
+                    Date = DateTime.Now
+                });
+
+                DataContext.EthiopicWords.AddRange(eWords);
+                DataContext.SaveChanges();
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
 
         private string GetInnerText()
         {
@@ -90,35 +164,5 @@ namespace Spider.Domain
             return childUris;
         }
 
-        public bool Save()
-        {
-            try
-            {
-                var webpage = new Data.Models.WebPage
-                {
-                    Url = Uri.GetUnicodeAbsoluteUri()
-                    ,
-                    HtmlContent = HtmlText
-                    ,
-                    TextContent = InnerText
-                    ,
-                    WebsiteID = Website.WebsiteID
-                    ,
-                    Date = DateTime.Now
-                    ,
-                    NavigatedFromWebPageID = ParentPage != null ? ParentPage.WebPageID : new int?()
-                };
-
-                _dataContext.WebPages.Add(webpage);
-
-                WebPageID = webpage.WebPageID;
-
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
     }
 }

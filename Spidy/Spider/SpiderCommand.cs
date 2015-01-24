@@ -11,7 +11,7 @@ namespace Spider.Crowler
 
         private void ResumeCrawling(string url)
         {
-            var spider = new Spider();
+            var spider = new Spider.Spider();
 
             var lastSite = _dc.Sites.OrderByDescending(s => s.VisitedDate).First();
             var uri = new Uri(lastSite.Url);
@@ -26,7 +26,7 @@ namespace Spider.Crowler
 
         private void StartCrawling(Uri uri)
         {
-            var spider = new Spider();
+            var spider = new Spider.Spider();
             spider.CrawlRecursive(uri, null);
         }
 
