@@ -11,10 +11,10 @@ namespace Spider.Data
         {
 
         }
-
+        public DbSet<Website> Websites { get; set; }
         public DbSet<WebPage> Sites { get; set; }
-        public DbSet<EthiopicWord> Words { get; set; }
-        public DbSet<Paragraph> Paragraphs { get; set; }
-        public DbSet<SeedSite> SeedSites { get; set; }
+        public DbSet<WebContent> Paragraphs { get; set; }
+        public DbSet<EthiopicWord> EthiopicWords { get; set; }
+        public DbSet<SeedWebsite> SeedSites { get; set; }
     }
 }
