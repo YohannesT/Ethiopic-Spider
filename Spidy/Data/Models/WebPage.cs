@@ -19,7 +19,6 @@ namespace Spider.Data.Models
         public int WebsiteID { get; set; }
         public int? NavigatedFromWebPageID { get; set; }
 
-
         public string HtmlContent { get; set; }
         public string TextContent { get; set; }
 

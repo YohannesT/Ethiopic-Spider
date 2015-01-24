@@ -5,6 +5,7 @@ using System.Net;
 using System.Threading.Tasks;
 using RobotsTxt;
 using Spider.Data;
+using Spider.Services;
 using Spider.Utility;
 
 namespace Spider.Domain
@@ -62,9 +63,9 @@ namespace Spider.Domain
                    Robots.IsPathAllowed(SpiderInfo.Useragent, uri.AbsolutePath)) && !WebPage.IsWebPageSaved(uri);
         }
 
-        public long Delay
+        public int Delay
         {
-            get { return Robots.CrawlDelay(SpiderInfo.Useragent); }
+            get { return (int)Robots.CrawlDelay(SpiderInfo.Useragent); }
         }
 
         private async Task<string> GetRobotsTxtAsync(Uri uri)

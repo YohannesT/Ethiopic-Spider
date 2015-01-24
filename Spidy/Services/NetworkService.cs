@@ -3,8 +3,9 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
+using Spider.Utility;
 
-namespace Spider.Utility
+namespace Spider.Services
 {
     public class NetworkService
     {
@@ -20,15 +21,14 @@ namespace Spider.Utility
             }
         }
 
-
         public static async Task<HtmlDocument> GetHtmlDocumentAsync(Uri uri)
         {
             try
             {
                 var request = WebRequest.CreateHttp(uri);
 
-                request.UserAgent = UserAgent + " - " + UserAgentDocumentation;
-                request.Headers.Add(HttpRequestHeader.From, UserAgentEmailAddress);
+                request.UserAgent = SpiderInfo.Useragent + " - " + SpiderInfo.UseragentDocumentation;
+                request.Headers.Add(HttpRequestHeader.From, SpiderInfo.UseragentDocumentation);
 
                 var response = await request.GetResponseAsync();
                 var stream = response.GetResponseStream();

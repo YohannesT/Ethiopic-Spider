@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Linq;
 using Spider.Crowler;
-using Spider.Data;
 
 namespace Spider
 {

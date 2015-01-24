@@ -7,6 +7,7 @@ using HtmlAgilityPack;
 using Spider.Crowler;
 using Spider.Data;
 using Spider.Data.Models;
+using Spider.Services;
 using Spider.Utility;
 
 namespace Spider.Domain
@@ -18,6 +19,15 @@ namespace Spider.Domain
         private readonly HtmlDocument _htmlDocument;
         private List<Uri> _intraDomainlinks, _allLinks;
         private string _htmlText, _innerText;
+
+        public WebPage(Data.Models.WebPage webPage)
+        {
+            WebPageID = webPage.WebPageID;
+            _htmlText = webPage.HtmlContent;
+            _innerText = webPage.TextContent;
+            Uri = new Uri(webPage.Url);
+            Date = webPage.Date;
+        }
 
         public WebPage(Website website, Uri uri, WebPage parent = null)
         {
@@ -104,6 +114,32 @@ namespace Spider.Domain
         public static bool IsWebPageSaved(Uri uri)
         {
             return DataContext.WebPages.Any(wp => wp.Url == uri.GetUnicodeAbsoluteUri());
+        }
+
+        public  bool SaveEthiopicContent()
+        {
+            try
+            {
+                if (!InnerText.ContainsEthipic()) return true;
+
+                var words =  InnerText.GetEthipicWords();
+
+                var eWords = words.Select(w => new EthiopicWord
+                {
+                    Name = w,
+                    SourceWebPageID = WebPageID,
+                    Date = DateTime.Now
+                });
+
+                DataContext.EthiopicWords.AddRange(eWords);
+                DataContext.SaveChanges();
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         public async Task<bool> SaveEthiopicContentAsync()
