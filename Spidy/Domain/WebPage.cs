@@ -14,7 +14,7 @@ namespace Spider.Domain
 {
     public class WebPage
     {
-        private static readonly DataContext DataContext = new DataContext();
+        private readonly DataContext _dataContext = new DataContext();
 
         private readonly HtmlDocument _htmlDocument;
         private List<Uri> _intraDomainlinks, _allLinks;
@@ -44,6 +44,11 @@ namespace Spider.Domain
         
         public Uri Uri { get; set; }
         public WebPage ParentPage { get; set; }
+
+        public bool IsDataLloaded
+        {
+            get { return _htmlDocument != null; }
+        }
 
         public DateTime Date { get; set; }
 
@@ -77,7 +82,7 @@ namespace Spider.Domain
 
         public bool IsSaved
         {
-            get { return DataContext.WebPages.Any(wp => wp.Url == Uri.GetUnicodeAbsoluteUri()); }
+            get { return _dataContext.WebPages.ToList().Any(wp => wp.Url == Uri.GetUnicodeAbsoluteUri()); }
         }
 
         public bool Save()
@@ -99,10 +104,10 @@ namespace Spider.Domain
                     NavigatedFromWebPageID = ParentPage != null ? ParentPage.WebPageID : new int?()
                 };
 
-                DataContext.WebPages.Add(webpage);
-
+                _dataContext.WebPages.Add(webpage);
+                _dataContext.SaveChanges();
                 WebPageID = webpage.WebPageID;
-
+                
                 return true;
             }
             catch (Exception)
@@ -113,7 +118,7 @@ namespace Spider.Domain
 
         public static bool IsWebPageSaved(Uri uri)
         {
-            return DataContext.WebPages.Any(wp => wp.Url == uri.GetUnicodeAbsoluteUri());
+            return new DataContext().WebPages.ToList().Any(wp => wp.Url == uri.GetUnicodeAbsoluteUri());
         }
 
         public  bool SaveEthiopicContent()
@@ -131,8 +136,8 @@ namespace Spider.Domain
                     Date = DateTime.Now
                 });
 
-                DataContext.EthiopicWords.AddRange(eWords);
-                DataContext.SaveChanges();
+                _dataContext.EthiopicWords.AddRange(eWords);
+                _dataContext.SaveChanges();
 
                 return true;
             }
@@ -157,8 +162,8 @@ namespace Spider.Domain
                     Date = DateTime.Now
                 });
 
-                DataContext.EthiopicWords.AddRange(eWords);
-                DataContext.SaveChanges();
+                _dataContext.EthiopicWords.AddRange(eWords);
+                _dataContext.SaveChanges();
 
                 return true;
             }

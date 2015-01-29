@@ -12,11 +12,16 @@ namespace Spider.Domain
 {
     public class Website
     {
-        private readonly DataContext _dataContext;
+        private readonly DataContext _dataContext = new DataContext();
+
+        public Website()
+        {
+            
+        }
 
         public Website(Uri uri)
         {
-            _dataContext = new DataContext();
+
             Uri = uri;
             IpAddresses = NetworkService.GetIpAddresses(uri);
             Robots = new Robots(GetRobotsTxtAsync(uri).Result);
@@ -35,7 +40,7 @@ namespace Spider.Domain
             {
                 var website = new Data.Models.Website
                 {
-                    Url = Uri.GetUnicodeAbsoluteUri()
+                    Url = Uri.GetUnicodeUri()
                     ,
                     RobotsTxt = Robots.Raw
                     ,
@@ -90,5 +95,25 @@ namespace Spider.Domain
             }
         }
 
+        public static bool IsWebsiteSaved(Uri uri)
+        {
+            var dc = new DataContext();
+            return dc.Websites.Any(c => c.Url == uri.Scheme + "://" + uri.Authority);
+        }
+
+        public static Website GetWebsite(Uri uri)
+        {
+            var dc = new DataContext();
+            var website = dc.Websites.First(w => w.Url == uri.Scheme + "://" + uri.Authority);
+            return new Website
+            {
+                WebsiteID = website.WebsiteID,
+                Uri = new Uri(website.Url),
+                IpAddresses = website.IpAddress.Split(';').Select(IPAddress.Parse).ToArray(),
+                Country = website.Country,
+                Robots = new Robots(website.RobotsTxt),
+                Date = website.Date
+            };
+        }
     }
 }

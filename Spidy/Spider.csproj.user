@@ -4,6 +4,7 @@
     <ProjectView>ProjectFiles</ProjectView>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <StartArguments>http://www.ethiopianreporter.com/ http://amharic.voanews.com/ http://sodere.com/group/sodere-news-in-amharic http://ethionetblog.blogspot.com/p/amharic-news.html</StartArguments>
+    <StartArguments>http://yegnaguday.com/tag/amharic-blog/ http://sodere.com/group/sodere-news-in-amharic http://ethionetblog.blogspot.com/p/amharic-news.html http://sodere.com/profiles/blog/list%3ftag=Amharic http://www.clickhabesh.com/%3ftag=ethiopian-amharic-blogs</StartArguments>
+    <StartAction>Project</StartAction>
   </PropertyGroup>
 </Project>
