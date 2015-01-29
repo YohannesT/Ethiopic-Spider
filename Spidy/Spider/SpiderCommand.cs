@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Spider.Data;
 using Spider.Domain;
 using Spider.Utility;
@@ -25,7 +27,7 @@ namespace Spider.Crowler
             spider.CrawlRecursive(uri, lastSite.ParentSite != null ? new WebPage(lastSite.ParentSite) : null, null );
         }
 
-        private void StartCrawling(Uri uri, int? delayInMinutes = null)
+        private async void StartCrawling(Uri uri, int? delayInMinutes = null)
         {
             var spider = delayInMinutes.HasValue ? new Spider.Spider(delayInMinutes.Value) : new Spider.Spider(); 
             
@@ -34,22 +36,31 @@ namespace Spider.Crowler
 
         public void StartCrawling(string[] urls)
         {
+           var tasks = new List<Task>();
             foreach (var url in urls)
             {
-                Uri uri;
-                if (Uri.TryCreate(url, UriKind.Absolute, out uri))
+                var dc = new DataContext();
+                var task = new Task(() =>
                 {
-                    if(_dc.WebPages.Any(s => s.Url.Contains(uri.Authority)))
-                        ResumeCrawling(uri.GetUnicodeAbsoluteUri());
-                    else StartCrawling(uri);
-
-                    Thread.Sleep(30 * 1000);
-                }
-                else
-                {
-                    Console.WriteLine("Unable to parse the {0}", url);
-                }
+                    Uri uri;
+                    if (Uri.TryCreate(url, UriKind.Absolute, out uri))
+                    {
+                        if (dc.WebPages.Any(s => s.Url.Contains(uri.Authority)))
+                            ResumeCrawling(uri.GetUnicodeAbsoluteUri());
+                        else StartCrawling(uri);
+                    }
+                    else
+                        Console.WriteLine("Unable to parse the {0}", url);
+                    
+                });
+                tasks.Add(task);
             }
+
+            tasks.ForEach(t =>
+            {
+                t.Start();
+                Thread.Sleep(5000);
+            });
         }
 
         public void StartFromSeed()
@@ -63,7 +74,7 @@ namespace Spider.Crowler
                         ResumeCrawling(uri.GetUnicodeAbsoluteUri(), seed.CrawlDelayInMinutes);
                     else StartCrawling(uri, seed.CrawlDelayInMinutes);
 
-                    Thread.Sleep(30 * 1000);
+                    Thread.Sleep(5 * 1000);
                 }
                 else
                 {
