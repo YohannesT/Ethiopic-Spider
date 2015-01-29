@@ -39,7 +39,7 @@ namespace Spider.Services
 
                 return htmlDocument;
             }
-            catch (Exception)
+            catch (WebException)
             {
                 return null;
             }

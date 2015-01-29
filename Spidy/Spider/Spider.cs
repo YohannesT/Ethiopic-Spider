@@ -48,13 +48,19 @@ namespace Spider.Spider
 
             if (website == null || parentWebPage == null || uri.Authority != parentWebPage.Uri.Authority)
             {
-                website = new Website(uri);
-                if(!website.Save()) //if saving fails
-                    if (!website.Save()) //try again
-                        return; //if it fails again, exit the function
+                if (Website.IsWebsiteSaved(uri))
+                    website = Website.GetWebsite(uri);
+                else
+                {
+                  website =  new Website(uri);
+                    if(!website.Save()) //if saving fails
+                        if (!website.Save()) //try again
+                            return; //if it fails again, exit the function
+                }  
             }
 
             var webPage = new WebPage(website, uri, parentWebPage);
+            if (!webPage.IsDataLloaded) return; //if for some reason the page wasn't loaded, return
 
             var siteLinks = _intraDomainOnly ? webPage.IntraDomainLinks : webPage.AllLinks;
             var allowedUris = siteLinks.Where(u => website.IsWebsiteAllowed(u));
@@ -75,6 +81,7 @@ namespace Spider.Spider
                     if (uri.Authority == childUri.Authority)
                     {
                         var robotDelay =  website.Delay;
+                        Console.WriteLine("Sleeping until {0} before crawling {1} again", DateTime.Now.AddMilliseconds(StandardDelay).ToShortDateString(), uri.GetUnicodeAbsoluteUri() );
                         Thread.Sleep(StandardDelay > robotDelay ? StandardDelay : robotDelay);
                     }
 
