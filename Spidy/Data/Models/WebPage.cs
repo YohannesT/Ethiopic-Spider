@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Spider.Data.Models
 {
-    [Table("WebPage")]
+    [Table("WebPage", Schema = "web")]
     public class WebPage
     {
         [Key]

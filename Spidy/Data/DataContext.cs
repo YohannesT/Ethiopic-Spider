@@ -6,8 +6,7 @@ namespace Spider.Data
     public class DataContext : DbContext
     {
         public DataContext()
-            //    : base(@"Data Source = 192.168.2.58; Initial Catalog = DEV_SYSTEMHEALTH; UID=hcmis;pwd=hcmis;")
-            : base("repo")
+            : base("data")
         {
 
         }

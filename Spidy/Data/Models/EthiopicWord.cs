@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Spider.Data.Models
 {
-    [Table("EthiopicWord")]
+    [Table("EthiopicWord", Schema = "web")]
     public class EthiopicWord
     {
         [Key]

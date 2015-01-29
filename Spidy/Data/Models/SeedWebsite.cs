@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Spider.Data.Models
 {
-    [Table("SeedWebsite")]
+    [Table("SeedWebsite", Schema = "web")]
     public class SeedWebsite
     {
         [Key]
