@@ -14,8 +14,6 @@ namespace Spider.Domain
 {
     public class WebPage
     {
-        private readonly DataContext _dataContext = new DataContext();
-
         private readonly HtmlDocument _htmlDocument;
         private List<Uri> _intraDomainlinks, _allLinks;
         private string _htmlText, _innerText;
@@ -41,7 +39,7 @@ namespace Spider.Domain
 
         public HtmlDocument HtmlDocument { get; set; }
         public Website Website { get; set; }
-        
+
         public Uri Uri { get; set; }
         public WebPage ParentPage { get; set; }
 
@@ -82,7 +80,13 @@ namespace Spider.Domain
 
         public bool IsSaved
         {
-            get { return _dataContext.WebPages.ToList().Any(wp => wp.Url == Uri.GetUnicodeAbsoluteUri()); }
+            get
+            {
+                using (var dc = new DataContext())
+                {
+                    return dc.WebPages.ToList().Any(wp => wp.Url == Uri.GetUnicodeAbsoluteUri());
+                }
+            }
         }
 
         public bool Save()
@@ -104,10 +108,13 @@ namespace Spider.Domain
                     NavigatedFromWebPageID = ParentPage != null ? ParentPage.WebPageID : new int?()
                 };
 
-                _dataContext.WebPages.Add(webpage);
-                _dataContext.SaveChanges();
+                using (var dc = new DataContext())
+                {
+                    dc.WebPages.Add(webpage);
+                    dc.SaveChanges();
+                }
                 WebPageID = webpage.WebPageID;
-                
+
                 return true;
             }
             catch (Exception)
@@ -121,13 +128,13 @@ namespace Spider.Domain
             return new DataContext().WebPages.ToList().Any(wp => wp.Url == uri.GetUnicodeAbsoluteUri());
         }
 
-        public  bool SaveEthiopicContent()
+        public bool SaveEthiopicContent()
         {
             try
             {
                 if (!InnerText.ContainsEthipic()) return true;
 
-                var words =  InnerText.GetEthipicWords();
+                var words = InnerText.GetEthipicWords();
 
                 var eWords = words.Select(w => new EthiopicWord
                 {
@@ -135,9 +142,11 @@ namespace Spider.Domain
                     SourceWebPageID = WebPageID,
                     Date = DateTime.Now
                 });
-
-                _dataContext.EthiopicWords.AddRange(eWords);
-                _dataContext.SaveChanges();
+                using (var dc = new DataContext())
+                {
+                    dc.EthiopicWords.AddRange(eWords);
+                    dc.SaveChanges();
+                }
 
                 return true;
             }
@@ -161,10 +170,12 @@ namespace Spider.Domain
                     SourceWebPageID = WebPageID,
                     Date = DateTime.Now
                 });
-
-                _dataContext.EthiopicWords.AddRange(eWords);
-                _dataContext.SaveChanges();
-
+                using (var dc = new DataContext())
+                {
+                    dc.EthiopicWords.AddRange(eWords);
+                    dc.SaveChanges();       
+                }
+             
                 return true;
             }
             catch (Exception)

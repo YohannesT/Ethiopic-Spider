@@ -12,8 +12,6 @@ namespace Spider.Domain
 {
     public class Website
     {
-        private readonly DataContext _dataContext = new DataContext();
-
         public Website()
         {
             
@@ -50,8 +48,12 @@ namespace Spider.Domain
                     ,
                     Date = DateTime.Now
                 };
-                _dataContext.Websites.Add(website);
-                _dataContext.SaveChanges();
+                using(var dc = new DataContext())
+                {
+                    dc.Websites.Add(website);
+                    dc.SaveChanges();
+                }
+
                 WebsiteID = website.WebsiteID;
 
                 return true;
