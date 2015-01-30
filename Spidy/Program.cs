@@ -1,5 +1,6 @@
 ﻿using System;
 using Spider.Crowler;
+using Spider.Redips;
 
 namespace Spider
 {

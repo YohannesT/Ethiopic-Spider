@@ -59,9 +59,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Spider\Spider.cs" />
+    <Compile Include="Redips\Spider.cs" />
     <Compile Include="Utility\EthiopicExtensions.cs" />
-    <Compile Include="Spider\SpiderCommand.cs" />
+    <Compile Include="Redips\SpiderCommand.cs" />
     <Compile Include="Data\DataContext.cs" />
     <Compile Include="Data\Models\SeedWebsite.cs" />
     <Compile Include="Data\Models\WebPage.cs" />
@@ -76,7 +76,9 @@
     <Compile Include="Utility\UriExtension.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
