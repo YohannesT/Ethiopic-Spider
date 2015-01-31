@@ -192,11 +192,18 @@ namespace Spider.Domain
 
         private List<Uri> GetChildUris()
         {
-            var links =
-              _htmlDocument.DocumentNode.SelectNodes("//a[@href]")
-               .Select(a => a.Attributes["href"])
-               .Select(a => a.Value).Distinct();
-
+            IEnumerable<string> links;
+            try
+            {
+                 links =
+                    _htmlDocument.DocumentNode.SelectNodes("//a[@href]")
+                        .Select(a => a.Attributes["href"])
+                        .Select(a => a.Value).Distinct();
+            }
+            catch (Exception)
+            {
+                return new List<Uri>();
+            }
             var childUris = new List<Uri>();
             links = links.Distinct().Where(l => l.Length > 1 && Uri.AbsoluteUri != l && !(l.Contains("#") || l.ToLower().Contains("javascript") || l.Contains("?share=")));
 

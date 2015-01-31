@@ -25,6 +25,8 @@ namespace Spider.Services
         {
             try
             {
+                uri = uri.LocalPath.Contains("//") ? new Uri(uri.Scheme + "://" + uri.Authority + uri.AbsolutePath.Replace("//", "/")) : uri;
+
                 var request = WebRequest.CreateHttp(uri);
 
                 request.UserAgent = SpiderInfo.Useragent + " - " + SpiderInfo.UseragentDocumentation;
