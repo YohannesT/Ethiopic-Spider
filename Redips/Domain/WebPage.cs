@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
-using Spider.Crowler;
 using Spider.Data;
 using Spider.Data.Models;
 using Spider.Services;

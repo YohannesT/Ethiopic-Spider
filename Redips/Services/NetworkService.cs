@@ -37,7 +37,7 @@ namespace Spider.Services
 
                 if (stream == null) return null;
                 var htmlDocument = new HtmlDocument();
-                htmlDocument.Load(stream, Encoding.UTF8);
+                htmlDocument.Load(stream, Encoding.Unicode);
 
                 return htmlDocument;
             }

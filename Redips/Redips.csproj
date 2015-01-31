@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Redips\Spider.cs" />
+    <Compile Include="Utility\Compression.cs" />
     <Compile Include="Utility\EthiopicExtensions.cs" />
     <Compile Include="Redips\SpiderCommand.cs" />
     <Compile Include="Data\DataContext.cs" />

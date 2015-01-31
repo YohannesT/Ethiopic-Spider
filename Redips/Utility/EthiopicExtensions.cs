@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Spider.Crowler
+namespace Spider.Utility
 {
     public static class EthiopicExtensions
     {
