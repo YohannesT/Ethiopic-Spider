@@ -4,11 +4,10 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Spider.Data;
-using Spider.Data.Models;
 using Spider.Utility;
 using WebPage = Spider.Domain.WebPage;
 
-namespace Spider.Redips
+namespace Redips.Crawler
 {
     public class SpiderCommand
     {
@@ -17,7 +16,7 @@ namespace Spider.Redips
 
             using (var dc = new DataContext())
             {
-                var spider = delayInMinutes.HasValue ? new Spider.Spider(delayInMinutes.Value) : new Spider.Spider();
+                var spider = delayInMinutes.HasValue ? new Spider(delayInMinutes.Value) : new Spider();
 
                 var lastSite = dc.WebPages.Where(u => u.Url == url).OrderByDescending(s => s.Date).First();
                 var uri = new Uri(lastSite.Url);
@@ -34,7 +33,7 @@ namespace Spider.Redips
 
         private void StartCrawling(Uri uri, int? delayInMinutes = null)
         {
-            var spider = delayInMinutes.HasValue ? new Spider.Spider(delayInMinutes.Value) : new Spider.Spider();
+            var spider = delayInMinutes.HasValue ? new Spider(delayInMinutes.Value) : new Spider();
 
             spider.CrawlRecursive(uri, null, null);
         }

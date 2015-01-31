@@ -7,8 +7,8 @@
     <ProjectGuid>{3642252F-9B41-4F73-BFF9-DE49D381925F}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Spider</RootNamespace>
-    <AssemblyName>Spider</AssemblyName>
+    <RootNamespace>Redips</RootNamespace>
+    <AssemblyName>Redips</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -59,10 +59,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Redips\Spider.cs" />
-    <Compile Include="Utility\Compression.cs" />
+    <Compile Include="Crawler\Spider.cs" />
+    <Compile Include="Services\CompressionService.cs" />
     <Compile Include="Utility\EthiopicExtensions.cs" />
-    <Compile Include="Redips\SpiderCommand.cs" />
+    <Compile Include="Crawler\SpiderCommand.cs" />
     <Compile Include="Data\DataContext.cs" />
     <Compile Include="Data\Models\SeedWebsite.cs" />
     <Compile Include="Data\Models\WebPage.cs" />

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Spider.Domain;
 using Spider.Utility;
 
-namespace Spider.Spider
+namespace Redips.Crawler
 {
     public class Spider
     {
