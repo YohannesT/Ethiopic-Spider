@@ -20,10 +20,8 @@ namespace Redips.Crawler
 
                 var lastSite = dc.WebPages.Where(u => u.Url == url).OrderByDescending(s => s.Date).First();
                 var uri = new Uri(lastSite.Url);
-                //IQueryable<EthiopicWord> wordsToDelete = dc.EthiopicWords.Where(w => w.SourceWebPageID == lastSite.WebPageID);
                 
                 dc.Database.ExecuteSqlCommand("delete from web.EthiopicWord where SourceWebPageID = {0}", lastSite.WebPageID);
-                //dc.EthiopicWords.RemoveRange(wordsToDelete);
                 dc.WebPages.Remove(lastSite);
                 dc.SaveChanges();
                 Console.WriteLine("{0} Resuming from {1}", DateTime.Now.ToShortTimeString(), uri.AbsoluteUri);
@@ -34,7 +32,6 @@ namespace Redips.Crawler
         private void StartCrawling(Uri uri, int? delayInMinutes = null)
         {
             var spider = delayInMinutes.HasValue ? new Spider(delayInMinutes.Value) : new Spider();
-
             spider.CrawlRecursive(uri, null, null);
         }
 
