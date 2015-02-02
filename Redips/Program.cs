@@ -1,8 +1,7 @@
 ﻿using System;
 using Redips.Crawler;
-using Spider.Crowler;
 
-namespace Spider
+namespace Redips
 {
     class Program
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Spider.Utility
+namespace Redips.Utility
 {
     public static class UriExtension
     {

@@ -3,9 +3,9 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
-using Spider.Utility;
+using Redips.Utility;
 
-namespace Spider.Services
+namespace Redips.Services
 {
     public class NetworkService
     {

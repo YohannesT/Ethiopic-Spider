@@ -57,27 +57,3 @@ Create Table web.SeedWebsite
 	, CrawlDelayInMinutes int
 	, VisitCount int
 )
-
-/*
-delete from word
-delete from site
-
-drop table word
-drop table Site
-drop table Paragraph
-
-select * from site
-select distinct * from word
-select * from paragraph
-
-select * from site
-delete from site where URL like '%twitter%' and SiteID not in (select SourceSiteID from word)
-delete from word where SourceSiteID in (select siteid from site where url like '%www.google.com%')
-
-select distinct  * from word where Name like ('አንድ')
-select (Sum(HtmlCharLength) * 2)/ (1024 * 1024) mb from Site*/
-
-
-
-alter table web.webpage
-drop column streamlength

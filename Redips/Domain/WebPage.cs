@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
+using Redips.Services;
+using Redips.Utility;
 using Spider.Data;
 using Spider.Data.Models;
-using Spider.Services;
-using Spider.Utility;
 
-namespace Spider.Domain
+namespace Redips.Domain
 {
     public class WebPage
     {
@@ -17,7 +17,7 @@ namespace Spider.Domain
         private List<Uri> _intraDomainlinks, _allLinks;
         private string _htmlText, _innerText;
 
-        public WebPage(Data.Models.WebPage webPage)
+        public WebPage(Spider.Data.Models.WebPage webPage)
         {
             WebPageID = webPage.WebPageID;
             _htmlText = webPage.HtmlContent;
@@ -92,7 +92,7 @@ namespace Spider.Domain
         {
             try
             {
-                var webpage = new Data.Models.WebPage
+                var webpage = new Spider.Data.Models.WebPage
                 {
                     Url = Uri.GetUnicodeAbsoluteUri()
                     ,
@@ -194,10 +194,12 @@ namespace Spider.Domain
             IEnumerable<string> links;
             try
             {
-                 links =
-                    _htmlDocument.DocumentNode.SelectNodes("//a[@href]")
-                        .Select(a => a.Attributes["href"])
-                        .Select(a => a.Value).Distinct();
+                var nodes =
+                    _htmlDocument.DocumentNode.SelectNodes("//a[@href]");
+                if(nodes != null)
+                    links = nodes.Select(a => a.Attributes["href"])
+                                 .Select(a => a.Value).Distinct();
+                else return new List<Uri>();
             }
             catch (Exception)
             {

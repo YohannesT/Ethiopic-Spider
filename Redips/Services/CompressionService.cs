@@ -3,7 +3,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Text;
 
-namespace Spider.Services
+namespace Redips.Services
 {
     class Compression
     {

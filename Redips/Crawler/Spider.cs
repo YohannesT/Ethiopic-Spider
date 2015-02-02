@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Spider.Domain;
-using Spider.Utility;
+using Redips.Domain;
+using Redips.Utility;
 
 namespace Redips.Crawler
 {

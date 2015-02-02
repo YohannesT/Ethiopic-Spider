@@ -3,12 +3,12 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Redips.Services;
+using Redips.Utility;
 using RobotsTxt;
 using Spider.Data;
-using Spider.Services;
-using Spider.Utility;
 
-namespace Spider.Domain
+namespace Redips.Domain
 {
     public class Website
     {
@@ -36,7 +36,7 @@ namespace Spider.Domain
         {
             try
             {
-                var website = new Data.Models.Website
+                var website = new Spider.Data.Models.Website
                 {
                     Url = Uri.GetUnicodeUri()
                     ,
