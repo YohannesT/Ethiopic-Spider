@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Spider.Data.Models
+namespace Redips.Data.Models
 {
     [Table("SeedWebsite", Schema = "web")]
     public class SeedWebsite

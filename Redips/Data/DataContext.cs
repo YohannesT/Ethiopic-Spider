@@ -1,7 +1,7 @@
 ﻿using System.Data.Entity;
-using Spider.Data.Models;
+using Redips.Data.Models;
 
-namespace Spider.Data
+namespace Redips.Data
 {
     public class DataContext : DbContext
     {

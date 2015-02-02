@@ -2,13 +2,13 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Spider.Data.Models
+namespace Redips.Data.Models
 {
     [Table("EthiopicWord", Schema = "web")]
     public class EthiopicWord
     {
         [Key]
-        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int EthiopicWordID { get; set; }
         public string Name { get; set; }
         public DateTime Date { get; set; }

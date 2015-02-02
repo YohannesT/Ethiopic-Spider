@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
+using Redips.Data;
+using Redips.Data.Models;
 using Redips.Services;
 using Redips.Utility;
-using Spider.Data;
-using Spider.Data.Models;
 
 namespace Redips.Domain
 {
@@ -17,13 +17,16 @@ namespace Redips.Domain
         private List<Uri> _intraDomainlinks, _allLinks;
         private string _htmlText, _innerText;
 
-        public WebPage(Spider.Data.Models.WebPage webPage)
+        public WebPage(Data.Models.WebPage webPage)
         {
             WebPageID = webPage.WebPageID;
             _htmlText = webPage.HtmlContent;
             _innerText = webPage.TextContent;
+            _htmlDocument = new HtmlDocument();
+            _htmlDocument.LoadHtml(webPage.HtmlContent);
             Uri = new Uri(webPage.Url);
             Date = webPage.Date;
+            Website = new Website(webPage.Website);
         }
 
         public WebPage(Website website, Uri uri, WebPage parent = null)
@@ -92,7 +95,7 @@ namespace Redips.Domain
         {
             try
             {
-                var webpage = new Spider.Data.Models.WebPage
+                var webpage = new Data.Models.WebPage
                 {
                     Url = Uri.GetUnicodeAbsoluteUri()
                     ,

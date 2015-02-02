@@ -3,10 +3,10 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Redips.Data;
 using Redips.Services;
 using Redips.Utility;
 using RobotsTxt;
-using Spider.Data;
 
 namespace Redips.Domain
 {
@@ -15,6 +15,14 @@ namespace Redips.Domain
         public Website()
         {
             
+        }
+
+        public Website(Data.Models.Website website)
+        {
+            Uri = new Uri(website.Url);
+            IpAddresses = website.IpAddress.Split(new [] {';'}, StringSplitOptions.RemoveEmptyEntries).Select(IPAddress.Parse).ToArray();
+            Robots = new Robots(website.RobotsTxt);
+            WebsiteID = website.WebsiteID;
         }
 
         public Website(Uri uri)
@@ -36,7 +44,7 @@ namespace Redips.Domain
         {
             try
             {
-                var website = new Spider.Data.Models.Website
+                var website = new Data.Models.Website
                 {
                     Url = Uri.GetUnicodeUri()
                     ,
