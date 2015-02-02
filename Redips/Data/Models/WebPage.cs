@@ -3,13 +3,13 @@ using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Spider.Data.Models
+namespace Redips.Data.Models
 {
     [Table("WebPage", Schema = "web")]
     public class WebPage
     {
         [Key]
-        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int WebPageID { get; set; }
         public string Url { get; set; }
          

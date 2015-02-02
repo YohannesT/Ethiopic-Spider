@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Spider.Data.Models
+namespace Redips.Data.Models
 {
     [Table("Website", Schema = "web")]
     public class Website
