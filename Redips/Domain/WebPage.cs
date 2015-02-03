@@ -8,6 +8,7 @@ using Redips.Data;
 using Redips.Data.Models;
 using Redips.Services;
 using Redips.Utility;
+using System.Text;
 
 namespace Redips.Domain
 {
@@ -23,7 +24,13 @@ namespace Redips.Domain
             _htmlText = webPage.HtmlContent;
             _innerText = webPage.TextContent;
             _htmlDocument = new HtmlDocument();
+
+            //var encod = _htmlDocument.DetectEncodingHtml(webPage.HtmlContent);
+
+            //var bytes = new UTF8Encoding().GetBytes(webPage.HtmlContent);
+            //var html = Encoding.UTF8.GetString(Encoding.Convert(encod, Encoding.UTF8, bytes));
             _htmlDocument.LoadHtml(webPage.HtmlContent);
+          
             Uri = new Uri(webPage.Url);
             Date = webPage.Date;
             Website = new Website(webPage.Website);

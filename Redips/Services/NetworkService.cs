@@ -37,7 +37,7 @@ namespace Redips.Services
 
                 if (stream == null) return null;
                 var htmlDocument = new HtmlDocument();
-                htmlDocument.Load(stream, Encoding.Unicode);
+                htmlDocument.Load(stream, Encoding.UTF8);
 
                 return htmlDocument;
             }

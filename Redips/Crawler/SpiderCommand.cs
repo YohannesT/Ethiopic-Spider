@@ -23,7 +23,7 @@ namespace Redips.Crawler
                 var webPage = new WebPage(lastSite);
                 var website = webPage.Website;
                 var allowedUri =  webPage.IntraDomainLinks
-                    .Where(u => !dc.WebPages.Any(w => w.Url == u.Scheme + "://" + u.Authority + u.LocalPath))
+                    .Where(u => !dc.WebPages.Any(w => w.Url.Contains(u.Scheme + "://" + u.Authority + u.LocalPath)))
                     .FirstOrDefault(website.IsWebsiteAllowed);
 
                 if (allowedUri == null) return;
