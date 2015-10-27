@@ -72,7 +72,7 @@ namespace Redips.Domain
             }
         }
 
-        public bool IsWebsiteAllowed(Uri uri)
+        public bool IsPathAllowed(Uri uri)
         {
             return (Robots.IsPathAllowed(SpiderInfo.Useragent, uri.GetUnicodeAbsoluteUri()) ||
                    Robots.IsPathAllowed(SpiderInfo.Useragent, uri.AbsolutePath)) && !WebPage.IsWebPageSaved(uri);

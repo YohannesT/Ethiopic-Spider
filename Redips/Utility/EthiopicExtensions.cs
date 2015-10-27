@@ -6,42 +6,42 @@ namespace Redips.Utility
 {
     public static class EthiopicExtensions
     {
-        public static List<string> GetEthipicWords(this string text)
+        public static List<string> GetEthiopicWords(this string text)
         {
             var split = new[] { ';', ' ', ':', '.', '\n' };
-            return text.Split(split).Where(ContainsEthipic).Select(w => w.Trim()).ToList();
+            return text.Split(split).Where(ContainsEthiopic).Select(w => w.Trim()).ToList();
         }
 
-        public static List<string> GetEthipicParagraphs(this string text)
+        public static List<string> GetEthiopicParagraphs(this string text)
         {
             var split = new[] {'\n' };
-            return text.Split(split).Where(ContainsEthipic).Select(w => w.Trim()).ToList();
+            return text.Split(split).Where(ContainsEthiopic).Select(w => w.Trim()).ToList();
         }
 
-        public static bool ContainsEthipic(this string text)
+        public static bool ContainsEthiopic(this string text)
         {
             return text.ToCharArray().ToList().Any(t => (int)t > 4608 && (int)t < 4988);
         }
 
-        public async static Task<List<string>> GetEthipicParagraphsAsync(this string text)
+        public async static Task<List<string>> GetEthiopicParagraphsAsync(this string text)
         {
             return await Task.Run(() =>
             {
                 var split = new[] {'\n'};
-                return text.Split(split).Where(ContainsEthipic).Select(w => w.Trim()).ToList();
+                return text.Split(split).Where(ContainsEthiopic).Select(w => w.Trim()).ToList();
             });
         }
 
-        public async static Task<List<string>> GetEthipicWordsAsync(this string text)
+        public async static Task<List<string>> GetEthiopicWordsAsync(this string text)
         {
             return await Task.Run(() =>
             {
                 var split = new[] { ';', ' ', ':', '.' };
-                return text.Split(split).Where(ContainsEthipic).Select(w => w.Trim()).ToList();
+                return text.Split(split).Where(ContainsEthiopic).Select(w => w.Trim()).ToList();
             });
         }
 
-        public static async Task<bool> ContainsEthipicAsync(this string text)
+        public static async Task<bool> ContainsEthiopicAsync(this string text)
         {
             return await Task.Run(() => text.ToCharArray().ToList().Any(t => (int)t > 4608 && (int)t < 4988));
         }

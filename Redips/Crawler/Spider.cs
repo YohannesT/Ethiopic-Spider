@@ -9,7 +9,7 @@ namespace Redips.Crawler
 {
     public class Spider
     {
-        private readonly int _maxAsyncThreadCount = SpiderInfo.AsyncThreadCount;
+        public readonly int MaxAsyncThreadCount = SpiderInfo.AsyncThreadCount;
         private readonly bool _intraDomainOnly = SpiderInfo.IntraDomainOnly;
         public readonly int StandardDelay = SpiderInfo.StandardDelay;
 
@@ -17,7 +17,7 @@ namespace Redips.Crawler
 
         public Spider()
         {
-
+            
         }
 
         public Spider(int delayInMinutes)
@@ -27,7 +27,7 @@ namespace Redips.Crawler
 
         public Spider(int maxAsyncThreadCount, int delayInMinutes, bool intraDomainOnly = true)
         {
-            _maxAsyncThreadCount = maxAsyncThreadCount;
+            MaxAsyncThreadCount = maxAsyncThreadCount;
             _intraDomainOnly = intraDomainOnly;
             StandardDelay = delayInMinutes*60*1000;
         }
@@ -36,7 +36,7 @@ namespace Redips.Crawler
         {
             _asyncThreadCount++;
 
-            while (_asyncThreadCount > _maxAsyncThreadCount)
+            while (_asyncThreadCount > MaxAsyncThreadCount)
             {
                 Console.WriteLine("{0} Waiting for others to finish before starting {1}", DateTime.Now.ToShortTimeString(), uri.AbsoluteUri);
                 Thread.Sleep(1000);
@@ -44,26 +44,27 @@ namespace Redips.Crawler
 
             Console.WriteLine("{0} Crawling over {1}.", DateTime.Now.ToShortTimeString(), uri.GetUnicodeAbsoluteUri());
 
-            if (WebPage.IsWebPageSaved(uri)) return;
+            if (WebPage.IsWebPageSaved(uri))
+                return;
 
             if (website == null || parentWebPage == null || uri.Authority != parentWebPage.Uri.Authority)
             {
-                if (Website.IsWebsiteSaved(uri))
-                    website = Website.GetWebsite(uri);
+                if (Website.IsWebsiteSaved(uri))//if the website is already known, it fetches from the database
+                    website = Website.GetWebsite(uri);//it saves us from fetching the robots.txt file
                 else
                 {
                   website =  new Website(uri);
                     if(!website.Save()) //if saving fails
                         if (!website.Save()) //try again
-                            return; //if it fails again, exit the function
+                            return; //if it fails again, exit the method
                 }  
             }
 
             var webPage = new WebPage(website, uri, parentWebPage);
-            if (!webPage.IsDataLloaded) return; //if for some reason the page wasn't loaded, return
+            if (!webPage.IsDataLloaded) return; //if for some reason the page wasn't loaded, exit the method
 
             var siteLinks = _intraDomainOnly ? webPage.IntraDomainLinks : webPage.AllLinks;
-            var allowedUris = siteLinks.Where(u => website.IsWebsiteAllowed(u));
+            var allowedUris = siteLinks.Where(u => website.IsPathAllowed(u));
 
             if (!webPage.Save())
                 webPage.Save();
@@ -74,7 +75,7 @@ namespace Redips.Crawler
 
             _asyncThreadCount--;
 
-            foreach (var childUri in allowedUris)
+            foreach (var childUri in allowedUris.Where(t => t.GetUnicodeAbsoluteUri().ContainsEthiopic()))
             {
                 try
                 {

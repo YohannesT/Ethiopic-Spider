@@ -8,7 +8,6 @@ using Redips.Data;
 using Redips.Data.Models;
 using Redips.Services;
 using Redips.Utility;
-using System.Text;
 
 namespace Redips.Domain
 {
@@ -134,16 +133,39 @@ namespace Redips.Domain
 
         public static bool IsWebPageSaved(Uri uri)
         {
-            return new DataContext().WebPages.ToList().Any(wp => wp.Url == uri.GetUnicodeAbsoluteUri());
+            var b = new DataContext().WebPages.ToList().Any(wp => wp.Url == uri.GetUnicodeAbsoluteUri());
+            return b;
+        }
+
+        public static bool IsLocalPathSaved(Uri uri)
+        {
+            var l1 = new DataContext()
+                .WebPages
+                .ToList()
+                .Any(wp => uri.LocalPath.Length > 1 && uri.LocalPath.Contains(new Uri(wp.Url).LocalPath));
+
+            var l2 = false;
+            foreach (var wp in new DataContext().WebPages.ToList().Where(u => new Uri(u.Url).Authority == uri.Authority))
+            {
+                var tUri = new Uri(wp.Url);
+                var savedPath = tUri.LocalPath;
+                var currentPath = uri.LocalPath;
+                if (savedPath.Length > 1 && currentPath.Length > 1 && (savedPath.Contains(currentPath) || currentPath.Contains(savedPath)))
+                {
+                    l2 = true;
+                    break;
+                }
+            }
+            return l2;
         }
 
         public bool SaveEthiopicContent()
         {
             try
             {
-                if (!InnerText.ContainsEthipic()) return true;
+                if (!InnerText.ContainsEthiopic()) return true;
 
-                var words = InnerText.GetEthipicWords();
+                var words = InnerText.GetEthiopicWords();
 
                 var eWords = words.Select(w => new EthiopicWord
                 {
@@ -169,9 +191,9 @@ namespace Redips.Domain
         {
             try
             {
-                if (!InnerText.ContainsEthipic()) return true;
+                if (!InnerText.ContainsEthiopic()) return true;
 
-                var words = await InnerText.GetEthipicWordsAsync();
+                var words = await InnerText.GetEthiopicWordsAsync();
 
                 var eWords = words.Select(w => new EthiopicWord
                 {
@@ -226,7 +248,7 @@ namespace Redips.Domain
                 else
                 {
                     if (link.StartsWith("/") || link.StartsWith("\\") && link.Length > 2)
-                        if (Uri.TryCreate(Uri.AbsoluteUri + link, UriKind.Absolute, out uri))
+                        if (Uri.TryCreate(Uri.Scheme + "://" + Uri.Authority + link, UriKind.Absolute, out uri))
                             childUris.Add(uri);
                 }
             }

@@ -11,6 +11,7 @@ namespace Redips.Crawler
 {
     public class SpiderCommand
     {
+
         private void ResumeCrawling(string url, int? delayInMinutes = null)
         {
             var rUri = new Uri(url);
@@ -23,13 +24,13 @@ namespace Redips.Crawler
                 var webPage = new WebPage(lastSite);
                 var website = webPage.Website;
                 var allowedUri =  webPage.IntraDomainLinks
-                    .Where(u => !dc.WebPages.Any(w => w.Url.Contains(u.Scheme + "://" + u.Authority + u.LocalPath)))
-                    .FirstOrDefault(website.IsWebsiteAllowed);
+                    .Where(u => !WebPage.IsWebPageSaved(new Uri(u.Scheme + "://" + u.Authority + u.LocalPath)) && u.GetUnicodeAbsoluteUri().ContainsEthiopic())
+                    .FirstOrDefault(website.IsPathAllowed);
 
                 if (allowedUri == null) return;
 
                 Console.WriteLine("{0} Resuming from {1}", DateTime.Now.ToShortTimeString(), allowedUri.GetUnicodeAbsoluteUri());
-                 spider.CrawlRecursive(allowedUri, lastSite.ParentSite != null ? new WebPage(lastSite.ParentSite) : null, null);
+                spider.CrawlRecursive(allowedUri, lastSite.ParentSite != null ? new WebPage(lastSite.ParentSite) : null, null);
             }
         }
 
@@ -50,7 +51,7 @@ namespace Redips.Crawler
                     Uri uri;
                     if (Uri.TryCreate(url, UriKind.Absolute, out uri))
                     {
-                        if (dc != null && dc.WebPages.Any(s => s.Url == url))
+                        if (dc.WebPages.Any(s => s.Url.Contains(uri.Authority)))
                             ResumeCrawling(uri.GetUnicodeAbsoluteUri());
                         StartCrawling(uri);
                     }
@@ -62,9 +63,8 @@ namespace Redips.Crawler
             tasks.ForEach(t =>
             {
                 t.Start();
-                Thread.Sleep(15000);
+                Thread.Sleep(30 * 1000);
             });
-
         }
 
         public void StartFromSeed()

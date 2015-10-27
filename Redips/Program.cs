@@ -19,16 +19,7 @@ namespace Redips
         {
             var spiderCommand = new SpiderCommand();
 
-            if (args.Length == 1)
-            {
-                spiderCommand.StartCrawling(args);
-            }
-            else if (args.Length == 2)
-            {
-
-                spiderCommand.StartCrawling(args);   
-            }
-            else if (args.Length > 2)
+            if (args.Length >= 1)
             {
                 spiderCommand.StartCrawling(args);
             }

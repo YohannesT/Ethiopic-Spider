@@ -4,7 +4,7 @@
     <ProjectView>ProjectFiles</ProjectView>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <StartArguments>http://yegnaguday.com/</StartArguments>
+    <StartArguments>http://ethiopianreporter.com/</StartArguments>
     <StartAction>Project</StartAction>
   </PropertyGroup>
 </Project>
