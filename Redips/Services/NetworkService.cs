@@ -21,7 +21,7 @@ namespace Redips.Services
             }
         }
 
-        public static async Task<HtmlDocument> GetHtmlDocumentAsync(Uri uri)
+        public static async Task<HtmlDocument> GetHtmlDocumentAsync(Uri uri, int retryCount = 3, int currentRetry = 0)
         {
             try
             {
@@ -43,7 +43,11 @@ namespace Redips.Services
             }
             catch (WebException)
             {
-                return null;
+                if (retryCount <= currentRetry + 1) return null;
+
+                var task = GetHtmlDocumentAsync(uri, retryCount, currentRetry++);
+
+                return task.Result;
             }
         }
     }
