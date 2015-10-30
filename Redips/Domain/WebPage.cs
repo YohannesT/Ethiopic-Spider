@@ -133,8 +133,8 @@ namespace Redips.Domain
 
         public static bool IsWebPageSaved(Uri uri)
         {
-            var b = new DataContext().WebPages.ToList().Any(wp => wp.Url == uri.GetUnicodeAbsoluteUri());
-            return b;
+            var url = uri.GetUnicodeAbsoluteUri();
+            return new DataContext().WebPages.ToList().Any(wp => wp.Url == url);
         }
 
         public static bool IsLocalPathSaved(Uri uri)

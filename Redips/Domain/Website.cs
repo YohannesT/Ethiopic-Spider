@@ -74,8 +74,14 @@ namespace Redips.Domain
 
         public bool IsPathAllowed(Uri uri)
         {
-            return (Robots.IsPathAllowed(SpiderInfo.Useragent, uri.GetUnicodeAbsoluteUri()) ||
-                   Robots.IsPathAllowed(SpiderInfo.Useragent, uri.AbsolutePath)) && !WebPage.IsWebPageSaved(uri);
+            var a = IsRobotAllowed(uri);
+            var b = !WebPage.IsWebPageSaved(uri);
+            return a && b;
+        }
+
+        public bool IsRobotAllowed(Uri uri)
+        {
+            return Robots.IsPathAllowed(SpiderInfo.Useragent, uri.GetUnicodeAbsoluteUri());
         }
 
         public int Delay

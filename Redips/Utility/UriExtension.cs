@@ -11,7 +11,7 @@ namespace Redips.Utility
 
         public static string GetUnicodeAbsoluteUri(this Uri uri)
         {
-            return String.Format("{0}://{1}{2}", uri.Scheme, uri.Authority, uri.LocalPath.Contains("//") ? uri.LocalPath.Replace("//", "/") : uri.LocalPath);
+            return String.Format("{0}://{1}{2}{3}", uri.Scheme, uri.Authority,  uri.LocalPath.Replace("//", "/"), uri.Query);
         }
     }
 }

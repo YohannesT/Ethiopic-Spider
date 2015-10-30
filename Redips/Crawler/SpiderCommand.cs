@@ -23,9 +23,7 @@ namespace Redips.Crawler
              
                 var webPage = new WebPage(lastSite);
                 var website = webPage.Website;
-                var allowedUri =  webPage.IntraDomainLinks
-                    .Where(u => !WebPage.IsWebPageSaved(new Uri(u.Scheme + "://" + u.Authority + u.LocalPath)) && u.GetUnicodeAbsoluteUri().ContainsEthiopic())
-                    .FirstOrDefault(website.IsPathAllowed);
+                var allowedUri = webPage.IntraDomainLinks.FirstOrDefault(website.IsPathAllowed);
 
                 if (allowedUri == null) return;
 
@@ -51,9 +49,19 @@ namespace Redips.Crawler
                     Uri uri;
                     if (Uri.TryCreate(url, UriKind.Absolute, out uri))
                     {
-                        if (dc.WebPages.Any(s => s.Url.Contains(uri.Authority)))
+                        //foreach (var u in dc.WebPages.Select(p => new Uri(p.Url)).Where(u => u.Authority.ToLower() == uri.Authority.ToLower()))
+                        //{
+                        //    Console.Write("Fuck");
+                        //}
+                        //if (dc.WebPages.ToList().Select(u => new Uri(u.Url)).Any(s => s.Authority.ToLower().Equals(uri.Authority.ToLower())))
+                        //    ResumeCrawling(uri.GetUnicodeAbsoluteUri());
+                        //else
+                        //    StartCrawling(uri);
+
+                        if (dc.WebPages.ToList().Any(s => s.Url.ToLower().Contains(uri.Authority.ToLower())))
                             ResumeCrawling(uri.GetUnicodeAbsoluteUri());
-                        StartCrawling(uri);
+                        else
+                            StartCrawling(uri);
                     }
                     else
                         Console.WriteLine("Unable to parse the {0}", url);
@@ -63,7 +71,7 @@ namespace Redips.Crawler
             tasks.ForEach(t =>
             {
                 t.Start();
-                Thread.Sleep(30 * 1000);
+                Thread.Sleep(10 * 1000);
             });
         }
 
@@ -86,6 +94,27 @@ namespace Redips.Crawler
                         Console.WriteLine("Unable to parse the {0}", seed.URL);
                 }
             }
+        }
+
+        private List<Uri> FindUnindexedLinks (bool intraDomainLinksOnly = true, bool withAmharicUrls = true)//aka gouge
+        {
+            var links = new List<Uri>();
+            using (var dataContext = new DataContext())
+            {
+                foreach (var dWp in dataContext.WebPages)
+                {
+                    var wp = new WebPage(dWp);
+                    var linksInPage = intraDomainLinksOnly ? wp.IntraDomainLinks : wp.AllLinks;
+
+                    foreach (var l in linksInPage)
+                    {
+                        if(!dataContext.WebPages.Any(u => u.Url == l.AbsoluteUri))
+                            links.Add(l);
+                    }
+
+                }
+            }
+            return links;
         }
     }
 }

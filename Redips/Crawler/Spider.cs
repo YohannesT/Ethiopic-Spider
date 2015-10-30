@@ -75,14 +75,14 @@ namespace Redips.Crawler
 
             _asyncThreadCount--;
 
-            foreach (var childUri in allowedUris.Where(t => t.GetUnicodeAbsoluteUri().ContainsEthiopic()))
+            foreach (var childUri in allowedUris)
             {
                 try
                 {
                     if (uri.Authority == childUri.Authority)
                     {
                         var robotDelay =  website.Delay;
-                        Console.WriteLine("Sleeping until {0} before crawling {1} again", DateTime.Now.AddMilliseconds(StandardDelay).ToShortDateString(), uri.GetUnicodeAbsoluteUri() );
+                        Console.WriteLine("Sleeping until {0} before crawling {1} again", DateTime.Now.AddMilliseconds(StandardDelay).ToShortTimeString(), uri.GetUnicodeAbsoluteUri() );
                         Thread.Sleep(StandardDelay > robotDelay ? StandardDelay : robotDelay);
                     }
 
