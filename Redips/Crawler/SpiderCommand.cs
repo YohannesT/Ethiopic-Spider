@@ -19,16 +19,19 @@ namespace Redips.Crawler
             {
                 var spider = delayInMinutes.HasValue ? new Spider(delayInMinutes.Value) : new Spider();
 
-                var lastSite = dc.WebPages.Where(u => u.Url.Contains(rUri.Authority)).OrderByDescending(s => s.Date).First();
-             
-                var webPage = new WebPage(lastSite);
-                var website = webPage.Website;
-                var allowedUri = webPage.IntraDomainLinks.FirstOrDefault(website.IsPathAllowed);
+                var pagesIndexed = dc.WebPages.Where(u => u.Url.Contains(rUri.Authority)).OrderByDescending(s => s.Date);
+                foreach (var page in pagesIndexed)
+                {
+                    var webPage = new WebPage(page);
+                    var website = webPage.Website;
+                    var allowedUri = webPage.IntraDomainLinks.FirstOrDefault(website.IsPathAllowed);
 
-                if (allowedUri == null) return;
+                    if (allowedUri == null) continue;
 
-                Console.WriteLine("{0} Resuming from {1}", DateTime.Now.ToShortTimeString(), allowedUri.GetUnicodeAbsoluteUri());
-                spider.CrawlRecursive(allowedUri, lastSite.ParentSite != null ? new WebPage(lastSite.ParentSite) : null, null);
+                    Console.WriteLine("{0} Resuming from {1}", DateTime.Now.ToShortTimeString(), allowedUri.GetUnicodeAbsoluteUri());
+                    spider.CrawlRecursive(allowedUri, page.ParentSite != null ? new WebPage(page.ParentSite) : null, null);
+                    break;
+                }
             }
         }
 
