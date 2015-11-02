@@ -41,8 +41,10 @@ namespace Redips.Services
 
                 return htmlDocument;
             }
-            catch (WebException)
+            catch (WebException e)
             {
+                if (System.Net.WebExceptionStatus.ProtocolError == e.Status)
+                    return null;
                 if (retryCount <= currentRetry + 1) return null;
 
                 var task = GetHtmlDocumentAsync(uri, retryCount, currentRetry++);

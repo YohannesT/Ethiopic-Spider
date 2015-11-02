@@ -24,10 +24,18 @@ namespace Redips.Crawler
                 {
                     var webPage = new WebPage(page);
                     var website = webPage.Website;
-                    var allowedUri = webPage.IntraDomainLinks.FirstOrDefault(website.IsPathAllowed);
+                    var allowedUri = webPage.IntraDomainLinks.FirstOrDefault(u => website.IsPathAllowed(u) && u.GetUnicodeAbsoluteUri().ContainsEthiopic());
 
                     if (allowedUri == null) continue;
-
+                    try
+                    {
+                        new WebPage(website, allowedUri);//just to check if the resume url is valid
+                    }
+                    catch (Exception)
+                    {
+                        continue;
+                    }
+                                       
                     Console.WriteLine("{0} Resuming from {1}", DateTime.Now.ToShortTimeString(), allowedUri.GetUnicodeAbsoluteUri());
                     spider.CrawlRecursive(allowedUri, page.ParentSite != null ? new WebPage(page.ParentSite) : null, null);
                     break;

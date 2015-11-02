@@ -41,6 +41,7 @@ namespace Redips.Domain
             Uri = uri;
             ParentPage = parent;
             _htmlDocument = NetworkService.GetHtmlDocumentAsync(uri).Result;
+            if(_htmlDocument == null) throw new Exception();
         }
 
         public int WebPageID { get; set; }

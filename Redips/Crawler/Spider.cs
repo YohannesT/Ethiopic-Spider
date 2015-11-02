@@ -60,11 +60,20 @@ namespace Redips.Crawler
                 }  
             }
 
-            var webPage = new WebPage(website, uri, parentWebPage);
+            WebPage webPage;
+            try
+            {
+               webPage = new WebPage(website, uri, parentWebPage);
+            }
+            catch (Exception)//any kind of error occures here, then exit
+            {
+                return;
+            }
+            
             if (!webPage.IsDataLloaded) return; //if for some reason the page wasn't loaded, exit the method
 
             var siteLinks = _intraDomainOnly ? webPage.IntraDomainLinks : webPage.AllLinks;
-            var allowedUris = siteLinks.Where(u => website.IsPathAllowed(u));
+            var allowedUris = siteLinks.Where(u => website.IsPathAllowed(u)).ToList();
 
             if (!webPage.Save())
                 webPage.Save();
@@ -74,8 +83,8 @@ namespace Redips.Crawler
                     webPage.SaveEthiopicContent();
 
             _asyncThreadCount--;
-
-            foreach (var childUri in allowedUris)
+            var childUris = allowedUris.Where(u => u.GetUnicodeAbsoluteUri().ContainsEthiopic()).ToList();
+            foreach (var childUri in childUris)
             {
                 try
                 {

@@ -20,7 +20,14 @@ namespace Redips.Utility
 
         public static bool ContainsEthiopic(this string text)
         {
-            return text.ToCharArray().ToList().Any(t => (int)t > 4608 && (int)t < 4988);
+           // return text.ToCharArray().ToList().Any(t => (int)t > 4608 && (int)t < 4988);
+            foreach (var c in text.ToCharArray())
+            {
+                var code = (int) c;
+                if (code > 0x1200 && code < 0x137C)
+                    return true;
+            }
+            return false;
         }
 
         public async static Task<List<string>> GetEthiopicParagraphsAsync(this string text)

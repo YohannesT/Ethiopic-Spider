@@ -17,6 +17,10 @@ namespace Redips
 
         private static void Init(string[] args)
         {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+            Console.Write('\u2103');
+            Console.Title = "Eth Robot";
+            
             var spiderCommand = new SpiderCommand();
 
             if (args.Length >= 1)
